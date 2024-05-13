@@ -50,7 +50,7 @@ class EditUserForm extends Component {
       departmentList,
     } = this.props;
     const { getFieldDecorator } = form;
-    const { id, username, mobile, allDepartments, position, nickname, email, tags } = currentRowData;
+    const { id, name, mobile, allDepartments, position, nickname, email, tags } = currentRowData;
     const formItemLayout = {
       labelCol: {
         sm: { span: 4 },
@@ -74,9 +74,9 @@ class EditUserForm extends Component {
             })(<Input disabled placeholder="请输入手机号" />)}
           </Form.Item>
           <Form.Item label="用户名称:">
-            {getFieldDecorator("username", {
+            {getFieldDecorator("name", {
               rules: [{ required: true, message: "请输入用户名称!" }],
-              initialValue: username
+              initialValue: name
             })(<Input placeholder="请输入用户名称" />)}
           </Form.Item>
           <Form.Item label="手机号:">
@@ -85,7 +85,7 @@ class EditUserForm extends Component {
               initialValue: mobile
             })(<Input placeholder="请输入手机号" />)}
           </Form.Item>
-          <Form.Item label="部门:">
+          {/* <Form.Item label="部门:">
             {getFieldDecorator("allDepartments", {
               initialValue: allDepartments ? allDepartments : [],
             })(
@@ -94,8 +94,8 @@ class EditUserForm extends Component {
                 expandTrigger="hover"
                 onChange={handleChange} />
             )}
-          </Form.Item>
-          <Form.Item label="岗位:">
+          </Form.Item> */}
+          {/* <Form.Item label="岗位:">
             {getFieldDecorator("position", {
               rules: [{ required: true, message: "请选择岗位" }],
               initialValue: {key: position, label: position}
@@ -113,20 +113,14 @@ class EditUserForm extends Component {
                 ))}
               </Select>
             )}
-          </Form.Item>
-          <Form.Item label="昵称:">
-            {getFieldDecorator("nickname", {
-              rules: [{ required: false}],
-              initialValue: nickname
-            })(<Input placeholder="请输入昵称" />)}
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label="邮箱:">
             {getFieldDecorator("email", {
               rules: [{ required: false}],
               initialValue: email
             })(<Input placeholder="邮箱" />)}
           </Form.Item>
-          <Form.Item label="人员标签:">
+          {/* <Form.Item label="人员标签:">
             {getFieldDecorator("tags", {
               rules: [{ required: false}],
               initialValue: tags
@@ -145,7 +139,7 @@ class EditUserForm extends Component {
                 ))}
               </Select>
             )}
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Modal>
     );

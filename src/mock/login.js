@@ -30,8 +30,8 @@ const users = {
 
 export default {
   login: (config) => {
-    const { username } = JSON.parse(config.body);
-    const token = tokens[username];
+    const { name } = JSON.parse(config.body);
+    const token = tokens[name];
     if (!token) {
       return {
         status: 1,

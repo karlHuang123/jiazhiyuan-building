@@ -91,7 +91,7 @@ class GeneralCarInfo extends Component {
       result.data.data.list.forEach(item => {
         const ele = {
           label: item.id,
-          value: item.username
+          value: item.name
         }
         temp.push(ele)
       })

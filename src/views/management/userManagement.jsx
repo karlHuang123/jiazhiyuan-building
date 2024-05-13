@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider, Input, Tooltip, Icon, Modal, Radio, Popconfirm } from "antd";
+import { Card, Button, Table, message, Divider, Input, Tooltip, Icon, Modal, Radio, Popconfirm, Pagination } from "antd";
 import { getUsers, deleteUser, editUser, addUser, resetPassword, changeState } from "@/api/user";
 import { getDepartmentList } from "@/api/department";
 import EditUserForm from "./forms/edit-user-form"
@@ -24,24 +24,31 @@ class UserManagement extends Component {
     resetPasswordVisible: false,
     changeStatusVisible: false,
     currentId: '',
-    currentStatus: null
+    currentStatus: null,
+    total: 0,
+    currentPage: 0,
+    pageSize: 10
   };
   getUsers = async () => {
-    const result = await getUsers()
-    if (result.data.status === 'OK') {
-      let temp = []
-      result.data.data.list.forEach(item => {
-        const uid = `U${item.id}`
-        const ele = {
-          uid: uid,
-          ...item
-        }
-        temp.push(ele)
-      })
-      this.setState({
-        users: temp
-      })
-    }
+    getUsers({page: this.state.currentPage, size: this.state.pageSize}, this.state.searchName).then(res => {
+      if (res.status === 200) {
+        let temp = []
+        res.data.data.list.forEach(item => {
+          const uid = `U${item.id}`
+          const ele = {
+            uid: uid,
+            ...item
+          }
+          temp.push(ele)
+        })
+        this.setState({
+          users: temp,
+          total: res.data.data.totalElements
+        })
+      } else {
+        message.error(res.statusText)
+      }
+    })
   }
   getDepartmentList = async () => {
     const result = await getDepartmentList()
@@ -54,13 +61,15 @@ class UserManagement extends Component {
   handleEditUser = (row) => {
     this.setState({
       currentRowData: Object.assign({}, row),
+      currentStatus: row.state,
       editUserModalVisible: true,
     });
   };
 
   handleDeleteUser = (row) => {
     const { id } = row
-    deleteUser({id}).then(res => {
+    deleteUser({ids: [id]}).then(res => {
+      console.log(res)
       message.success("删除成功")
       this.getUsers();
     })
@@ -74,14 +83,14 @@ class UserManagement extends Component {
       }
       const body = {
         id: values.id,
-        username: values.username, // 必填
+        name: values.name, // 必填
         mobile: values.mobile,  //必填
-        department: values.department ? parseInt(values.department[values.department.length - 1]) : 0,
-        allDepartments: values.department,
-        position: values.position.key || '',
-        nickname: values.nickname || '',
+        // department: values.department ? parseInt(values.department[values.department.length - 1]) : 0,
+        // allDepartments: values.department,
+        // position: values.position.key || '',
         email: values.email || '',
-        tags: values.tags || ''
+        state: this.state.currentStatus
+        // tags: values.tags || ''
       }
       this.setState({ editModalLoading: true, });
       editUser(body).then((response) => {
@@ -90,7 +99,7 @@ class UserManagement extends Component {
         message.success("编辑成功!")
         this.getUsers()
       }).catch(e => {
-        message.success("编辑失败,请重试!")
+        message.error("编辑失败,请重试!")
       })
       
     });
@@ -117,21 +126,23 @@ class UserManagement extends Component {
       }
       const body = {
         id: values.id,
-        username: values.username, // 必填
+        name: values.name, // 必填
         mobile: values.mobile,  //必填
-        department:  values.department ? parseInt(values.department[values.department.length - 1]) : 0,
-        allDepartments: values.department,
-        position: values.position.key || '',
-        nickname: values.nickname || '',
+        // department:  values.department ? parseInt(values.department[values.department.length - 1]) : 0,
+        // position: values.position.key || '',
         email: values.email || '',
-        tags: values.tags || ''
+        // tags: values.tags || ''
       }
       this.setState({ addUserModalLoading: true, });
       addUser(body).then((response) => {
-        form.resetFields();
-        this.setState({ addUserModalVisible: false, addUserModalLoading: false });
-        message.success("添加成功!")
-        this.getUsers()
+        if (response.status === 200) {
+          form.resetFields();
+          this.setState({ addUserModalVisible: false, addUserModalLoading: false });
+          message.success("添加成功!")
+          this.getUsers()
+        } else {
+          message.success(response.statusText)
+        }
       }).catch(e => {
         message.error("添加失败,请重试!")
       })
@@ -196,9 +207,25 @@ class UserManagement extends Component {
       resetPasswordVisible: false
     })
   }
+  changePageSize = (current, pageSize) => {
+    this.setState({
+        pageSize: pageSize
+      }, () => {
+        this.getUsers()
+      }
+    )
+  }
+  changePage = (current, pageSize) => {
+    this.setState({
+      currentPage: current - 1
+    }, () => {
+      this.getUsers()
+    }
+  )
+  }
   componentDidMount() {
     this.getUsers()
-    this.getDepartmentList()
+    // this.getDepartmentList()
   }
   render() {
     const { users, searchName } = this.state
@@ -211,7 +238,7 @@ class UserManagement extends Component {
           prefix={<Icon style={{marginLeft: '4px'}} type="search" />}
           allowClear
           onPressEnter={
-          (e) => console.log(e.target.value)
+          (e) => this.getUsers()
         } />
         &nbsp;
         <Button type='primary' onClick={this.handleAddUser}>
@@ -223,18 +250,21 @@ class UserManagement extends Component {
     return (
       <div className="app-container">
         <Card title={title}>
-          <Table bordered rowKey="uid" dataSource={users} pagination={true}>
+          <Table 
+            bordered 
+            rowKey="uid" 
+            dataSource={users} 
+            pagination={false}>
             <Column title="用户ID" dataIndex="uid" key="uid" align="center"/>
-            <Column title="用户名称" width={105} dataIndex="username" key="username" align="center"/>
+            <Column title="用户名称" width={105} dataIndex="name" key="name" align="center"/>
             <Column title="手机号" width={125} dataIndex="mobile" key="mobile" align="center"/>
-            <Column title="岗位" dataIndex="position" key="position" align="center" />
-            <Column title="部门" dataIndex="department" key="department" align="center" />
+            {/* <Column title="部门" dataIndex="department" key="department" align="center" /> */}
             <Column title="状态" key="state" align="center"render={(_, {state}) => (
               <span>
-                {state === 1 ? '在职' : '离职'}
+                {state === 'NORMAL' ? '正常' : '禁用'}
               </span>
             )}/>
-            <Column title="人员标签" key="tags" align="center" render={(_, {tags}) => (
+            {/* <Column title="人员标签" key="tags" align="center" render={(_, {tags}) => (
               <span>
                 {
                   tags.map((item, index) => {
@@ -244,7 +274,7 @@ class UserManagement extends Component {
                   })
                 }
               </span>
-            )}/>
+            )}/> */}
             <Column title="修改时间" key="updateTime" width={165} align="center" render={(text, row) => (
               <span>
                 {moment(row.updateTime ? row.updateTime : row.createTime).format('YYYY-MM-DD HH:mm:ss')}
@@ -278,6 +308,18 @@ class UserManagement extends Component {
               </span>
             )}/>
           </Table>
+          <br />
+          <Pagination
+            total={this.state.total}
+            pageSizeOptions={["10", "20", "40"]}
+            showTotal={(total) => `共${total}条数据`}
+            onChange={this.changePage}
+            current={this.state.currentPage + 1}
+            onShowSizeChange={this.changePageSize}
+            showSizeChanger
+            showQuickJumper
+            hideOnSinglePage={true}
+          />
         </Card>
         <EditUserForm
           currentRowData={this.state.currentRowData}

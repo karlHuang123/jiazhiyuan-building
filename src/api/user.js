@@ -8,16 +8,17 @@ export function reqUserInfo(data) {
   })
 }
 
-export function getUsers() {
+export function getUsers(data, keyword) {
   return request({
-    url: '/admin/user/list',
-    method: 'get'
+    url: `/admin/user/list?keyword=${keyword}`,
+    method: 'post',
+    data
   })
 }
 
 export function deleteUser(data) {
   return request({
-    url: '/admin/user/del',
+    url: '/admin/user/delete',
     method: 'post',
     data
   })
@@ -47,11 +48,11 @@ export function addUser(data) {
   })
 }
 
-export function resetPassword(data) {
+export function resetPassword(params) {
   return request({
     url: '/admin/user/reset/pass',
-    method: 'post',
-    data
+    method: 'get',
+    params
   })
 }
 

@@ -2,9 +2,9 @@ import { setUserToken, resetUser } from "./user";
 import { reqLogin, reqLogout } from "@/api/login";
 import { setToken, removeToken } from "@/utils/auth";
 import { message } from "antd";
-export const login = (username, password) => (dispatch) => {
+export const login = (name, password) => (dispatch) => {
   return new Promise((resolve, reject) => {
-    reqLogin({ mobile: username.trim(), password: password })
+    reqLogin({ mobile: name.trim(), password: password })
       .then((response) => {
         const { data } = response;
         if (data && data.status === 'OK') {

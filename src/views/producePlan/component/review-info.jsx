@@ -34,7 +34,7 @@ class ReviewInfo extends Component {
                         {currentTaskData ? (
                                 <div className="grid grid-5">
                                     {currentTaskData.groupLeaders.map((item, index) => (
-                                        <div key={item.id}>{item.username}</div>
+                                        <div key={item.id}>{item.name}</div>
                                     ))}
                                 </div>
                             ) : (<span></span>)}
@@ -44,7 +44,7 @@ class ReviewInfo extends Component {
                         {currentTaskData ? (
                                 <div className="grid grid-5">
                                     {currentTaskData.groupMembers.map((item, index) => (
-                                        <div key={item.id}>{item.username}</div>
+                                        <div key={item.id}>{item.name}</div>
                                     ))}
                                 </div>
                             ) : (<span></span>)}

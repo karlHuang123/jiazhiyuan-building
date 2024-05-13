@@ -33,8 +33,9 @@ export function editClient(data) {
 
 export function getContractList(data) {
   return request({
-    url: `/admin/contract/list?currPage=${data.currPage}&pageSize=${data.pageSize}&keyword=${data.keyword}&clientType=${data.clientType}&creatorId=${data.creatorId}`,
-    method: 'get'
+    url: `/admin/contract/list`,
+    method: 'post',
+    data
   })
 }
 

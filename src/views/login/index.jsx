@@ -12,10 +12,10 @@ const Login = (props) => {
 
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (username, password) => {
+  const handleLogin = (name, password) => {
     // 登录完成后 发送请求 调用接口获取用户信息
     setLoading(true);
-    login(username, password)
+    login(name, password)
       .then((data) => {
         message.success("登录成功");
         // handleUserInfo(data.token);
@@ -43,8 +43,8 @@ const Login = (props) => {
     form.validateFields((err, values) => {
       // 检验成功
       if (!err) {
-        const { username, password } = values;
-        handleLogin(username, password);
+        const { name, password } = values;
+        handleLogin(name, password);
       } else {
         console.log("检验失败!");
       }
@@ -63,7 +63,7 @@ const Login = (props) => {
           </div>
           <Spin spinning={loading} tip="登录中...">
             <Form.Item>
-              {getFieldDecorator("username", {
+              {getFieldDecorator("name", {
                 rules: [
                   {
                     required: true,

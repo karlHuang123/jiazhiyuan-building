@@ -76,7 +76,7 @@ class AddUserForm extends Component {
       >
         <Form {...formItemLayout}>
           <Form.Item label="用户名称:">
-            {getFieldDecorator("username", {
+            {getFieldDecorator("name", {
               rules: [{ required: true, message: "请输入用户名称!" }],
             })(<Input placeholder="请输入用户名称" />)}
           </Form.Item>
@@ -85,7 +85,7 @@ class AddUserForm extends Component {
               rules: [{ required: true, message: "手机号不能为空" }],
             })(<Input placeholder="请输入手机号" />)}
           </Form.Item>
-          <Form.Item label="部门:">
+          {/* <Form.Item label="部门:">
             {getFieldDecorator("department", {
               initialValue: "",
             })(
@@ -94,8 +94,8 @@ class AddUserForm extends Component {
                 expandTrigger="hover"
                 onChange={handleChange} />
             )}
-          </Form.Item>
-          <Form.Item label="岗位:">
+          </Form.Item> */}
+          {/* <Form.Item label="岗位:">
             {getFieldDecorator("position", {
               rules: [{ required: true, message: "请选择岗位" }]
             })(
@@ -112,18 +112,13 @@ class AddUserForm extends Component {
                 ))}
               </Select>
             )}
-          </Form.Item>
-          <Form.Item label="昵称:">
-            {getFieldDecorator("nickname", {
-              rules: [{ required: false}],
-            })(<Input placeholder="请输入昵称" />)}
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label="邮箱:">
             {getFieldDecorator("email", {
               rules: [{ required: false}],
             })(<Input placeholder="邮箱" />)}
           </Form.Item>
-          <Form.Item label="人员标签:">
+          {/* <Form.Item label="人员标签:">
             {getFieldDecorator("tags", {
               rules: [{ required: false}]
             })(
@@ -141,7 +136,7 @@ class AddUserForm extends Component {
                 ))}
               </Select>
             )}
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Modal>
     );

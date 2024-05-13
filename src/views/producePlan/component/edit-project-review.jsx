@@ -29,7 +29,7 @@ class EditProjectReview extends Component {
       let temp = []
       result.data.data.list.forEach(item => {
         const ele = {
-            label: item.username,
+            label: item.name,
             value: parseInt(item.id)
         }
         temp.push(ele)
